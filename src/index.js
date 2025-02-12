@@ -37,6 +37,19 @@ app.delete("/ac*d",(req,res)=>{
     res.send("hello world")
 })
 
+// next()---> it is used to pass the control to the next matching routehandler(or middleware)
+app.get("/video",(req,res,next)=>{
+    console.log("middleware")
+    next()
+},
+[(req,res,next)=>{
+    console.log("video page")
+    res.send("video page")
+   
+}],
+(req,res)=>{
+    console.log("middleware")
+})
 
 // we need to listen 
 app.listen(port,()=>{
