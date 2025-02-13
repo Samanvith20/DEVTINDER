@@ -1,40 +1,51 @@
 const express=require("express")
+const{authMiddleware,userauth}=require("./middlewares/authmiddleware")
 // create a instance of express
 const app=express()
 
 // create a port
 const port=3000
 
-// order of execution is important while routing 
-// handle the route (this will be applicable to all http methods)
-app.use("/hello",(req,res)=>{
-    res.send("Hello World")
+
+// calling the middleare for "/admin route" for all the routes of HTTP methods
+app.use("/admin",authMiddleware)
+
+app.get("/admin/getUserDetails",(req,res)=>{
+    res.send("admin user details")
 })
 
-// this will be applicable to only get method
-app.get("/contact",(req,res)=>{
-    res.send("contact page")
+// calling the middleware for "/user route" for only get method
+app.post("/admin/addUser",(req,res)=>{
+    res.send("admin user added")
 })
 
-// this will be applicable to only post method
-app.post("/contact",(req,res)=>{
-    res.send("contact page")
+// without calling the middleware because we are not using it
+app.get("/user/getUserDetails",userauth,(req,res)=>{
+    res.send("user details")
 })
 
-app.get("/about",(req,res)=>{
-    console.log("query in the url",req.query)
-    res.send("about page")
+app.post("/user/login",(req,res)=>{
+    res.send("user login")
 })
 
-// here b is optional it may or may not be present 
-app.patch("/ab?c",(req,res)=>{
-    res.send("anything after /ab and before c will be matched")
+app.get("/error",(req,res)=>{
+    
+    throw new Error("something went wrong")
+    // another way of handling the error
+    //  catch (error) {
+     
+    //     res.status(500).send("something went wrong")
+        
+    // }
+    
 })
 
-
-// this will be (*) write anything after /ac will be matched
-app.delete("/ac*d",(req,res)=>{
-    res.send("hello world")
+// error handling it is one way of handling the error
+app.use((err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
+    
 })
 
 // next()---> it is used to pass the control to the next matching routehandler(or middleware)
@@ -50,6 +61,8 @@ app.get("/video",(req,res,next)=>{
 (req,res)=>{
     console.log("middleware")
 })
+
+
 
 // we need to listen 
 app.listen(port,()=>{
