@@ -1,70 +1,46 @@
-const express=require("express")
-const{authMiddleware,userauth}=require("./middlewares/authmiddleware")
-// create a instance of express
-const app=express()
+const express = require("express");
+const { authMiddleware, userauth } = require("./middlewares/authmiddleware");
+const connectdb = require("./config/database");
+const User = require("./models/user.model");
 
-// create a port
-const port=3000
+// Create an instance of Express
+const app = express();
 
-
-// calling the middleare for "/admin route" for all the routes of HTTP methods
-app.use("/admin",authMiddleware)
-
-app.get("/admin/getUserDetails",(req,res)=>{
-    res.send("admin user details")
-})
-
-// calling the middleware for "/user route" for only get method
-app.post("/admin/addUser",(req,res)=>{
-    res.send("admin user added")
-})
-
-// without calling the middleware because we are not using it
-app.get("/user/getUserDetails",userauth,(req,res)=>{
-    res.send("user details")
-})
-
-app.post("/user/login",(req,res)=>{
-    res.send("user login")
-})
-
-app.get("/error",(req,res)=>{
-    
-    throw new Error("something went wrong")
-    // another way of handling the error
-    //  catch (error) {
-     
-    //     res.status(500).send("something went wrong")
-        
-    // }
-    
-})
-
-// error handling it is one way of handling the error
-app.use((err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong")
-    }
-    
-})
-
-// next()---> it is used to pass the control to the next matching routehandler(or middleware)
-app.get("/video",(req,res,next)=>{
-    console.log("middleware")
-    next()
-},
-[(req,res,next)=>{
-    console.log("video page")
-    res.send("video page")
-   
-}],
-(req,res)=>{
-    console.log("middleware")
-})
+// dotenv configuration
+require("dotenv").config();
 
 
 
-// we need to listen 
-app.listen(port,()=>{
-    console.log(`server is running on port ${port}`)
-})
+// Define a port
+const port = 3000;
+
+// Signup Route
+app.post("/signup", async (req, res) => {
+  try {
+    const userDetails = {
+      name: "Samanvith",
+      email: "Samanvith123@gmail.com",
+      age: 23,
+    };``
+
+    const newUser = new User(userDetails);
+    await newUser.save();
+
+    res.status(201).send("User created successfully");
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Connect to database and then start the server
+connectdb()
+  .then(() => {
+    console.log("Database connected");
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Error while connecting to database", err);
+  });
