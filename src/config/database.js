@@ -6,7 +6,7 @@ const connectdb = async () => {
     console.log("process.env.MONGODB_URI", process.env.MONGODB_URI);
 
     try {
-        await mongoose.connect(process.env.MONGODB_URI, {
+        await mongoose.connect("mongodb+srv://yervala:samanvith@cluster0.glwkn.mongodb.net/devtinder", {
            
         });
         console.log("Database connected successfully");
