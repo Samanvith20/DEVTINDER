@@ -1,3 +1,7 @@
+
+
+
+
 const express = require("express");
 const { authMiddleware, userauth } = require("./middlewares/authmiddleware");
 const connectdb = require("./config/database");
@@ -21,15 +25,29 @@ app.post("/signup", async (req, res) => {
  
   console.log("Request body:", req.body);
   try {
+    // need to validate the request body
+    const allowedFields = ["name", "email", "password", "age", "skills", "about","gender"];
+    const receivedFields = Object.keys(req.body);
+      
+    const isValidOperation = receivedFields.every((field) =>
+      allowedFields.includes(field)
+    );
+    console.log("isValidOperation:", isValidOperation);
+    if(!isValidOperation){
+        return res.status(400).send("Invalid fields");
+    }
+
+
    
     // creating an instance of User model
     const newUser = new User(req.body);
+
     await newUser.save();
 
     res.status(201).send("User created successfully");
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 });
 
