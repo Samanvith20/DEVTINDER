@@ -1,26 +1,33 @@
  
- const authMiddleware = (req, res, next) => {
-    console.log("auth middleware is called")
-    const token="abc"
-   let Authorizedtoken=token==="abc" ? true : false
-    if (Authorizedtoken) {
-        next()
-    } else {
-        res.status(401).send("You are not authorized")
+ const jwt = require("jsonwebtoken");
+const User = require("../models/user.model");
+ const authMiddleware = async(req, res, next) => {
+    try {
+        const{token}=req.cookies;
+        if(!token){
+            return res.status(401).send("Unauthorised");
+        }
+        const verifyToken= await jwt.verify(token,"samanvitj");
+        console.log("Verify Token:",verifyToken);
+        const{_id}=verifyToken;
+        const user = await User.findById(_id);
+        if (!user) {
+          throw new Error("User not found");
+        }
+        // console.log("User:",user);
+        req.user=user;
+        next();
+
+        
+    } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
+    
    
  }
 
- const userauth=(req,res,next)=>{
-        console.log("user auth")
-        const usertoken=23445
-        let userAdminaccess=usertoken===234 ? true : false
-        if(userAdminaccess){
-            next()
-        }else{
-            res.send("You are not authorized")
-        }
- }
+ 
 
- module.exports = { authMiddleware,userauth }
+ module.exports = { authMiddleware,}
 
