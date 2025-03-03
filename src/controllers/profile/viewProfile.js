@@ -4,7 +4,7 @@ const userProfile=  async (req, res) => {
       const userDetail = req.user;
       console.log("User details:", userDetail);
        
-      res.send("user details are displayed"); 
+      res.status(200).json({ user: userDetail });
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
