@@ -7,7 +7,7 @@ const login=async (req, res) => {
       const user = await User.findOne({ email });
       console.log("User:", user);
       if (!user) {
-        return res.status(400).send("Invalid credentials");
+        return res.status(400).json({ error: "Invalid credentials" });
       }
       // compare the password
       const isMatch = await user.validatePassword(password);
@@ -19,7 +19,7 @@ const login=async (req, res) => {
       console.log("Token:",token);
       res.cookie("token",token,)
   
-      res.status(200).send("Logged in successfully");
+      res.status(200).json({ message: "User logged in successfully", user, token });
   
     } catch (error) {
       console.error("Error logging in:", error);
