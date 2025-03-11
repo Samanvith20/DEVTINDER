@@ -13,7 +13,7 @@ const connectionRequest=async(req,res)=>{
         if(!statusAllowedFields.includes(status)){
             return res.status(400).json({error:"Invalid status"});
         }
-        // check if these reuest already from both the ends 
+        // check if these request already from both the ends 
         const connectionRequest=await ConnectionRequest.findOne({
             $or:[
                 {senderId:fromUserId,receiverId:id},

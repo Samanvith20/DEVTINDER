@@ -44,7 +44,7 @@ const bcrypt = require("bcrypt");
             },
         },
         
-        profilePicture:{
+        photoUrl:{
             type: String,
         },
         skills:{

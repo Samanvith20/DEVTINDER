@@ -5,14 +5,14 @@ const User = require("../models/user.model");
     try {
         const{token}=req.cookies;
         if(!token){
-            return res.status(401).send("Unauthorised");
+            return res.status(401).json({error:"Unauthorized"});
         }
         const verifyToken= await jwt.verify(token,"samanvitj");
         console.log("Verify Token:",verifyToken);
         const{_id}=verifyToken;
         const user = await User.findById(_id);
         if (!user) {
-          throw new Error("User not found");
+            return res.status(400).json({ error: "Invalid credentials" });
         }
         // console.log("User:",user);
         req.user=user;

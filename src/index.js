@@ -3,6 +3,7 @@
 
 
 const express = require("express");
+const cors = require("cors");
 
 const connectdb = require("./config/database");
 
@@ -13,6 +14,14 @@ const app = express();
 
 // dotenv configuration
 require("dotenv").config();
+
+// Middleware to enable CORS
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 
 // Middleware to parse the request body as JSON

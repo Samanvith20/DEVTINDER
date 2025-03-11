@@ -1,8 +1,10 @@
 
 const logOut=async(req,res)=>{
     try {
-        res.clearCookie("token");
-        res.send("Logged out successfully");
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+          });
+            res.status(200).json({ message: "User logged out successfully" });
         
     } catch (error) {
         console.error("Error logging out:", error);
