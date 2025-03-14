@@ -12,12 +12,18 @@ const viewConnections = async(req,res)=>{
                 {receiverId:loggedInUserId,status:"accepted"},
                 {senderId:loggedInUserId,status:"accepted"}
             ]
-        }).populate("senderId receiverId", "name email age profilePicture");
+        }).populate("senderId receiverId", "name email age photoUrl");
         if(!connections){
             return res.status(404).json({error:"No connections found"});
         }
+        const data = connections.map((row) => {
+            if (row.senderId._id.toString() === loggedInUserId.toString()) {
+              return row.receiverId;
+            }
+            return row.senderId;
+          });
 
-        res.json({message:"Connections found successfully", data:connections});
+        res.json({message:"Connections found successfully", data:data});
         
     } catch (error) {
         

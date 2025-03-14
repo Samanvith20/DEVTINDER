@@ -10,7 +10,7 @@ const viewRequest= async(req,res)=>{
         const requests= await ConnectionRequest.find({
             receiverId:loggedInUserId,
             status:"interested"
-        }).populate("senderId", "name email age profilePicture");
+        }).populate("senderId", "name email age photoUrl");
 
         if(!requests){
             return res.status(404).json({error:"No requests found"});
