@@ -3,6 +3,9 @@
 
 
 const express = require("express");
+const http = require("http");
+
+
 const cors = require("cors");
 
 const connectdb = require("./config/database");
@@ -35,15 +38,20 @@ const port = 3000;
 
 
 
+
 // Import the routes
 const userRoute = require("./routes/userroutes.js")
 const profileRoute = require("./routes/profileroutes.js")
 const requestRoute = require("./routes/requestroute.js")
-const connectionsRoute = require("./routes/userprofile.js")
+const connectionsRoute = require("./routes/userprofile.js");
+const initializeSocket = require("./utils/socket.js");
 app.use("/api/auth" , userRoute)
 app.use("/api/profile", profileRoute)
 app.use("/api/request", requestRoute)
 app.use("/api/profile", connectionsRoute)
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 
 
@@ -52,7 +60,7 @@ app.use("/api/profile", connectionsRoute)
 connectdb()
   .then(() => {
     console.log("Database connected");
-    app.listen(port, () => {
+     server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   })
