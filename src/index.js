@@ -16,7 +16,9 @@ var cookieParser = require('cookie-parser')
 const app = express();
 
 // dotenv configuration
-require("dotenv").config();
+require("dotenv").config(
+  
+);
 
 // Middleware to enable CORS
 app.use(
@@ -45,10 +47,14 @@ const profileRoute = require("./routes/profileroutes.js")
 const requestRoute = require("./routes/requestroute.js")
 const connectionsRoute = require("./routes/userprofile.js");
 const initializeSocket = require("./utils/socket.js");
+const paymentRoute = require("./routes/paymentroutes.js")
+
 app.use("/api/auth" , userRoute)
 app.use("/api/profile", profileRoute)
 app.use("/api/request", requestRoute)
 app.use("/api/profile", connectionsRoute)
+app.use("/api/payment", paymentRoute)
+
 
 const server = http.createServer(app);
 initializeSocket(server);
