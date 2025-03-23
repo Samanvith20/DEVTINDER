@@ -28,6 +28,9 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 // Middleware to parse the request body as JSON
 app.use(express.json());
